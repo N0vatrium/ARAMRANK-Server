@@ -1,6 +1,7 @@
 'use strict';
 
 const league = require("./league.js");
+const {supportsCache} = require("./cache");
 
 function processGameResult(sum, match) {
   const baseValue = 20;
@@ -33,9 +34,26 @@ function processGameResult(sum, match) {
     }
   }
 
-  const Pf = match.poroFed ? 1 : -1;
-  const kda = 0.5*(match.k - match.d + 0.2 * match.a);
-  const mainFactor = sum.mainChampId == match.championId && match.win ? 2.5 : 1;
+  let Pf
+
+  // they deserve every snacks
+  switch (match.poroSnacks) {
+    case 0 : Pf = 2; break;
+    case 1 : Pf = -1; break;
+    case 2 : Pf = -2; break;
+    default: Pf = 0;
+  }
+
+  let assistFactor = 0.2
+
+  // if the player has a lot more assists than kills, and it's on our list
+  // it must be a support
+  if ((match.a * 3 > match.k) && supportsCache.has(match.championId)) {
+    assistFactor = 0.5;
+  }
+
+  const kda = 0.5*(match.k - match.d + assistFactor * match.a);
+  const mainFactor = sum.mainChampId === match.championId && match.win ? 2.5 : 1;
   const penta = match.pentaKills * 5;
   const fb = match.firstBlood ? 1.5 : 0;
 

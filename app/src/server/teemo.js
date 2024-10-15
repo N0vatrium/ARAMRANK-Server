@@ -88,7 +88,7 @@ async function processAllMatches(matches, sum) {
 
   //reverse
   for (let i = filteredMatches.length - 1; i >= 0; i--) {
-    sumUtils.processGameResult(sum, filteredMatches[i]);  
+    sumUtils.processGameResult(sum, filteredMatches[i]);
   }
 }
 
@@ -135,7 +135,7 @@ async function processMatch(matchId, sum) {
   newMatch.d = participant.deaths;
   newMatch.a = participant.assists;
   newMatch.firstBlood = participant.firstBloodKill;
-  newMatch.poroFed = participant.item6 === 0;
+  newMatch.poroSnacks = participant.item6;
   return newMatch;
 }
 
