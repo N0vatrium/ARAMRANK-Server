@@ -46,9 +46,15 @@ function processGameResult(sum, match) {
 
   let assistFactor = 0.2
 
-  // if the player has a lot more assists than kills, and it's on our list
+  // if the player has a lot more assists than kills, a high kp and it's on our list
   // it must be a support
-  if ((match.a * 3 > match.k) && supportsCache.has(match.championId)) {
+  let killParticipation = 0;
+  if (match.teamKills > 0) {
+    killParticipation = (match.k + match.a) / match.teamKills
+    killParticipation = Math.round(killParticipation * 100) / 100;
+  }
+
+  if ((match.a * 3 > match.k) && killParticipation > 0.8 && supportsCache.has(match.championId)) {
     assistFactor = 0.5;
   }
 
